@@ -58,7 +58,8 @@ struct T
 {
     T(double v, const char* namePtr) : value(v) 
     {
-        name = *namePtr;
+        if (namePtr != nullptr) name = *namePtr;
+        else name = "";
     }   //1
 
     double value;//2
@@ -69,6 +70,11 @@ struct CompareClass                                //4
 {
     T* compare(T* a, T* b) //5
     {
+        if (a == nullptr || b == nullptr) 
+        {
+            std::cout << "Invalid pointer passed to compare function." << std::endl;
+            return nullptr;
+        }
         if( a->value < b->value ) return a;
         if( a->value > b->value ) return b;
         return nullptr;
