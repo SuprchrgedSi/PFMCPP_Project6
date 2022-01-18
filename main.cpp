@@ -56,46 +56,71 @@ Purpose:  This project will show you the difference between member functions and
 #include <string>
 struct T
 {
-    T(<#type name#> v, const char* <#variable name#>)   //1
-    //2
-    //3
+    T(double v, const char* namePtr) : value(v) 
+    {
+        if (namePtr != nullptr) name = *namePtr;
+        else name = "";
+    }   //1
+
+    double value;//2
+    std::string name;//3
 };
 
-struct <#structName1#>                                //4
+struct CompareClass                                //4
 {
-    <#type name#> compare(<#type name#> a, <#type name#> b) //5
+    T* compare(T* a, T* b) //5
     {
-        if( a->value < b->value ) return a;
-        if( a->value > b->value ) return b;
+        if (a != nullptr && b != nullptr) 
+        {
+            if( a->value < b->value ) return a;
+            if( a->value > b->value ) return b;    
+        }
+        std::cout << "Invalid pointer passed to compare function." << std::endl;
         return nullptr;
     }
 };
 
 struct U
 {
-    float <#name1#> { 0 }, <#name2#> { 0 };
-    <#returnType#> <#memberFunction#>(<#type name#>* <#updatedValue#>)      //12
+    float float1 { 0 }, float2 { 0 };
+    float squareCloseMember(float* newFloat)      //12
     {
-        
+        if (newFloat == nullptr)
+        {
+            std::cout << "Updated value points to an invalid value." << std::endl;
+            return 0.f;   
+        }
+        std::cout << "U's float1 value: " << this->float1 << std::endl;
+        float1 = *newFloat;
+        std::cout << "U's float1 updated value: " << this->float1 << std::endl;
+        while( std::abs(this->float2 - this->float1) > 0.001f )
+        {
+            this->float2 += (this->float1 - this->float2)/2;
+        }
+        std::cout << "U's float2 updated value: " << this->float2 << std::endl;
+        return this->float2 * this->float1;
     }
 };
 
-struct <#structname2#>
+struct squareCloseClass
 {
-    static <#returntype#> <#staticFunctionA#>(U* that, <#type name#>* <#updatedValue#> )        //10
+    static float squareClose(U* that, float* newFloat )        //10
     {
-        std::cout << "U's <#name1#> value: " << that-><#name1#> << std::endl;
-        that-><#name1#> = <#updatedValue#>;
-        std::cout << "U's <#name1#> updated value: " << that-><#name1#> << std::endl;
-        while( std::abs(that-><#name2#> - that-><#name1#>) > 0.001f )
+        if (that == nullptr || newFloat == nullptr)
         {
-            /*
-             write something that makes the distance between that-><#name2#> and that-><#name1#> get smaller
-             */
-            that-><#name2#> += ;
+            std::cout << "Invalid pointer passed to squareClose function." << std::endl;
+            return 0.f;
         }
-        std::cout << "U's <#name2#> updated value: " << that-><#name2#> << std::endl;
-        return that-><#name2#> * that-><#name1#>;
+
+        std::cout << "U's float1 value: " << that->float1 << std::endl;
+        that->float1 = *newFloat;
+        std::cout << "U's float1 updated value: " << that->float1 << std::endl;
+        while( std::abs(that->float2 - that->float1) > 0.001f )
+        {
+           that->float2 += (that->float1 - that->float2)/2;
+        }
+        std::cout << "U's float2 updated value: " << that->float2 << std::endl;
+        return that->float2 * that->float1;
     }
 };
         
@@ -115,17 +140,18 @@ struct <#structname2#>
 
 int main()
 {
-    T <#name1#>( , );                                             //6
-    T <#name2#>( , );                                             //6
+    T t1( 3.5, "Dev");                                             //6
+    T t2( 6.3, "Chuck");                                             //6
     
-    <#structName1#> f;                                            //7
-    auto* smaller = f.compare( , );                              //8
-    std::cout << "the smaller one is << " << smaller->name << std::endl; //9
+    CompareClass f;                                            //7
+    auto* smaller = f.compare( &t1, &t2);    
+    if (smaller != nullptr)                          //8
+        std::cout << "the smaller one is << " << smaller->name << std::endl; //9
     
-    U <#name3#>;
+    U u1;
     float updatedValue = 5.f;
-    std::cout << "[static func] <#name3#>'s multiplied values: " << <#structname2#>::<#staticFunctionA#>( , ) << std::endl;                  //11
+    std::cout << "mult u1's multiplied values: " << squareCloseClass::squareClose(&u1, &updatedValue) << std::endl;                  //11
     
-    U <#name4#>;
-    std::cout << "[member func] <#name4#>'s multiplied values: " << <#name4#>.<#memberFunction#>( &updatedValue ) << std::endl;
+    U u2;
+    std::cout << "squareCloseMember u2's multiplied values: " << u2.squareCloseMember(&updatedValue ) << std::endl;
 }
