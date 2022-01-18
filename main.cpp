@@ -41,13 +41,11 @@ struct T
 
 struct CompareClass                                //4
 {
-    T* compare(T* a, T* b) //5
+    const T* compare(const T& a, const T& b) //5
     {
-        if (a != nullptr && b != nullptr) 
-        {
-            if( a->value < b->value ) return a;
-            if( a->value > b->value ) return b;    
-        }
+        if( a.value < b.value ) return &a;
+        if( a.value > b.value ) return &b;    
+
         std::cout << "Invalid pointer passed to compare function." << std::endl;
         return nullptr;
     }
@@ -56,15 +54,10 @@ struct CompareClass                                //4
 struct U
 {
     float float1 { 0 }, float2 { 0 };
-    float squareCloseMember(float* newFloat)      //12
+    float squareCloseMember(const float& newFloat)      //12
     {
-        if (newFloat == nullptr)
-        {
-            std::cout << "Updated value points to an invalid value." << std::endl;
-            return 0.f;   
-        }
         std::cout << "U's float1 value: " << this->float1 << std::endl;
-        float1 = *newFloat;
+        float1 = newFloat;
         std::cout << "U's float1 updated value: " << this->float1 << std::endl;
         while( std::abs(this->float2 - this->float1) > 0.001f )
         {
@@ -77,16 +70,16 @@ struct U
 
 struct squareCloseClass
 {
-    static float squareClose(U* that, float* newFloat )        //10
+    static float squareClose(U* that, const float& newFloat )        //10
     {
-        if (that == nullptr || newFloat == nullptr)
+        if (that == nullptr)
         {
             std::cout << "Invalid pointer passed to squareClose function." << std::endl;
             return 0.f;
         }
 
         std::cout << "U's float1 value: " << that->float1 << std::endl;
-        that->float1 = *newFloat;
+        that->float1 = newFloat;
         std::cout << "U's float1 updated value: " << that->float1 << std::endl;
         while( std::abs(that->float2 - that->float1) > 0.001f )
         {
@@ -117,14 +110,14 @@ int main()
     T t2( 6.3, "Chuck");                                             //6
     
     CompareClass f;                                            //7
-    auto* smaller = f.compare( &t1, &t2);    
+    auto* smaller = f.compare(t1, t2);    
     if (smaller != nullptr)                          //8
         std::cout << "the smaller one is << " << smaller->name << std::endl; //9
     
     U u1;
     float updatedValue = 5.f;
-    std::cout << "mult u1's multiplied values: " << squareCloseClass::squareClose(&u1, &updatedValue) << std::endl;                  //11
+    std::cout << "mult u1's multiplied values: " << squareCloseClass::squareClose(&u1, updatedValue) << std::endl;                  //11
     
     U u2;
-    std::cout << "squareCloseMember u2's multiplied values: " << u2.squareCloseMember(&updatedValue ) << std::endl;
+    std::cout << "squareCloseMember u2's multiplied values: " << u2.squareCloseMember(updatedValue ) << std::endl;
 }
