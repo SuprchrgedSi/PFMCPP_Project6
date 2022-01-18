@@ -70,13 +70,12 @@ struct CompareClass                                //4
 {
     T* compare(T* a, T* b) //5
     {
-        if (a == nullptr || b == nullptr) 
+        if (a != nullptr && b != nullptr) 
         {
-            std::cout << "Invalid pointer passed to compare function." << std::endl;
-            return nullptr;
+            if( a->value < b->value ) return a;
+            if( a->value > b->value ) return b;    
         }
-        if( a->value < b->value ) return a;
-        if( a->value > b->value ) return b;
+        std::cout << "Invalid pointer passed to compare function." << std::endl;
         return nullptr;
     }
 };
@@ -107,15 +106,10 @@ struct squareCloseClass
 {
     static float squareClose(U* that, float* newFloat )        //10
     {
-        if (that == nullptr)
+        if (that == nullptr || newFloat == nullptr)
         {
-            std::cout << "U object value points to an invalid value." << std::endl;
+            std::cout << "Invalid pointer passed to squareClose function." << std::endl;
             return 0.f;
-        }
-        if (newFloat == nullptr)
-        {
-            std::cout << "Updated value points to an invalid value." << std::endl;
-            return 0.f;   
         }
 
         std::cout << "U's float1 value: " << that->float1 << std::endl;
