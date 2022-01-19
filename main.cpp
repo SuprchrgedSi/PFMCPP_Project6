@@ -107,7 +107,9 @@ int main()
     auto* smaller = f.compare(t1, t2);    
     if (smaller != nullptr)                          //8
         std::cout << "the smaller one is << " << smaller->name << std::endl; //9
-    
+    else 
+        std::cout << "the objects are equal" << std::endl; //9
+        
     U u1;
     float updatedValue = 5.f;
     std::cout << "mult u1's multiplied values: " << squareCloseClass::squareClose(u1, updatedValue) << std::endl;                  //11
