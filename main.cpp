@@ -70,23 +70,17 @@ struct U
 
 struct squareCloseClass
 {
-    static float squareClose(U* that, const float& newFloat )        //10
+    static float squareClose(U& that, const float& newFloat )        //10
     {
-        if (that == nullptr)
+        std::cout << "U's float1 value: " << that.float1 << std::endl;
+        that.float1 = newFloat;
+        std::cout << "U's float1 updated value: " << that.float1 << std::endl;
+        while( std::abs(that.float2 - that.float1) > 0.001f )
         {
-            std::cout << "Invalid pointer passed to squareClose function." << std::endl;
-            return 0.f;
+           that.float2 += (that.float1 - that.float2)/2;
         }
-
-        std::cout << "U's float1 value: " << that->float1 << std::endl;
-        that->float1 = newFloat;
-        std::cout << "U's float1 updated value: " << that->float1 << std::endl;
-        while( std::abs(that->float2 - that->float1) > 0.001f )
-        {
-           that->float2 += (that->float1 - that->float2)/2;
-        }
-        std::cout << "U's float2 updated value: " << that->float2 << std::endl;
-        return that->float2 * that->float1;
+        std::cout << "U's float2 updated value: " << that.float2 << std::endl;
+        return that.float2 * that.float1;
     }
 };
         
@@ -116,7 +110,7 @@ int main()
     
     U u1;
     float updatedValue = 5.f;
-    std::cout << "mult u1's multiplied values: " << squareCloseClass::squareClose(&u1, updatedValue) << std::endl;                  //11
+    std::cout << "mult u1's multiplied values: " << squareCloseClass::squareClose(u1, updatedValue) << std::endl;                  //11
     
     U u2;
     std::cout << "squareCloseMember u2's multiplied values: " << u2.squareCloseMember(updatedValue ) << std::endl;
